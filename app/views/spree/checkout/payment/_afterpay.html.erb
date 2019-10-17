@@ -1,0 +1,7 @@
+<div>
+  <% param_prefix = "payment_source[#{payment_method.id}]" %>
+  <p><%= payment_method.description.html_safe %></p>
+  <span class="field">
+    <%= hidden_field_tag "#{param_prefix}[email]", @order.email %>
+  </span>
+</div>

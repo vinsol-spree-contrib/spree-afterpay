@@ -1,6 +1,7 @@
 module SpreeAfterpay
   class Engine < Rails::Engine
     require 'spree/core'
+    require 'afterpay-ruby'
     isolate_namespace Spree
     engine_name 'spree_afterpay'
 
@@ -13,6 +14,10 @@ module SpreeAfterpay
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/**/*_decorator*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
+    end
+
+    initializer "spree.register.payment_methods" do |app|
+      app.config.spree.payment_methods << Spree::PaymentMethod::Afterpay
     end
 
     config.to_prepare(&method(:activate).to_proc)

@@ -1,0 +1,24 @@
+module Spree
+  class AfterpayService
+    attr_reader :order, :payment, :afterpay_source, :options
+
+    def initialize(afterpay_source, options = {})
+      @afterpay_source = afterpay_source
+      @payment = afterpay_source.payment
+      @order = @payment.order
+      @options = options
+    end
+
+    def checkout
+      @checkout_request = Spree::AfterpayApi::Checkout.new(order, payment, afterpay_source, options)
+      @checkout_request.perform
+      @checkout_request.success?
+    end
+
+    def capture
+      @payment_request = Spree::AfterpayApi::Payment.new(order, payment, afterpay_source, options)
+      @payment_request.capture
+      @payment_request.success?
+    end
+  end
+end
