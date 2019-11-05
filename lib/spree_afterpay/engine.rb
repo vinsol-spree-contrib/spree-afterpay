@@ -16,8 +16,8 @@ module SpreeAfterpay
       end
     end
 
-    initializer "spree.register.payment_methods" do |app|
-      app.config.spree.payment_methods << Spree::PaymentMethod::Afterpay
+    initializer "spree.afterpay.payment_methods", after: "spree.register.payment_methods" do |app|
+      app.config.spree.payment_methods << Spree::Gateway::Afterpay
     end
 
     config.to_prepare(&method(:activate).to_proc)

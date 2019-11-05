@@ -1,11 +1,15 @@
 module Spree
   class AfterpayController < Spree::BaseController
 
-    before_action :load_order
+    before_action :load_order, only: [:cancel, :success]
     before_action :validate_token, only: [:cancel, :success]
     before_action :validate_success_status, only: [:success]
     before_action :reset_completed_at_field_of_order, only: [:cancel, :success]
     before_action :invalidate_afterpay_payment, only: [:cancel]
+
+    def source
+      # ToDo create
+    end
 
     def success
       complete_order(Spree.t(:order_processed_successfully))
@@ -25,7 +29,7 @@ module Spree
     def validate_token
       sanitized_token = params[:orderToken].try(:split, '?').try(:first)
       unless sanitized_token == @order.payments&.afterpay.last&.source&.transaction_id
-        redirect_to(spree.cart_path) && return
+        redirect_to(spree.cart_path)
       end
     end
 
@@ -47,10 +51,10 @@ module Spree
     end
 
     def load_order
-      @order = Spree::Order.includes(:adjustments, line_items: [variant: [:images, :option_values, :product]]).find_by(number: params[:id])
+      @order = Spree::Order.find_by(number: params[:id])
 
       unless @order.present? && @order.payment_total < @order.total
-        redirect_to(spree.cart_path) && return
+        redirect_to(spree.cart_path)
       end
     end
 
@@ -61,7 +65,7 @@ module Spree
     def complete_order(flash_message)
       unless @order.next
         flash[:error] = [@order.errors.full_messages.join('\n'), Spree.t(:contact_customer_service)].join(' ')
-        redirect_to(checkout_state_path(@order.state)) && return
+        redirect_to(checkout_state_path(@order.state))
       end
 
       if @order.completed?
