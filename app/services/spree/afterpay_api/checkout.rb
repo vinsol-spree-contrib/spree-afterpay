@@ -33,6 +33,7 @@ module Spree::AfterpayApi
     def build_afterpay_order
       @afterpay_order = Afterpay::Order.new(
         total: Money.new(payment.amount * 100, 'AUD'),
+        # total: Money.new(payment.amount * 100, options[:currency]),
         consumer: customer,
         items: items,
         success_url: Spree.railtie_routes_url_helpers.success_afterpay_url(order, host: host_url),
@@ -41,13 +42,14 @@ module Spree::AfterpayApi
         billing_address: billing_address,
         shipping_address: shipping_address,
         shipping: Money.new(order.shipment_total * 100, 'AUD')
+        # shipping: Money.new(order.shipment_total * 100, options[:currency])
       )
     end
 
     def send_create_order_request
       @response = @afterpay_order.create
       if @response.success?
-        afterpay_source.update_columns(transaction_id: @response.token, expire_at: @response.expiry)
+        afterpay_source.update_columns(token: @response.token, expire_at: @response.expiry)
       end
     end
 
@@ -78,6 +80,7 @@ module Spree::AfterpayApi
         items << Afterpay::Item.new(
           name: line_item.name,
           price: Money.new(line_item.price * 100, 'AUD'),
+          # price: Money.new(line_item.price * 100, options[:currency]),
           sku: line_item.sku,
           quantity: line_item.quantity,
         )

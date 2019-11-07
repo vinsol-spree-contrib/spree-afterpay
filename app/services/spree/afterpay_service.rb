@@ -1,6 +1,6 @@
 module Spree
   class AfterpayService
-    attr_reader :order, :payment, :afterpay_source, :options
+    attr_reader :order, :payment, :afterpay_source, :options, :payment_request
 
     def initialize(afterpay_source, options = {})
       @afterpay_source = afterpay_source
@@ -20,5 +20,12 @@ module Spree
       @payment_request.capture
       @payment_request.success?
     end
+
+    def refund
+      @refund_request = Spree::AfterpayApi::Refund.new(order, payment, afterpay_source, options[:amount], options)
+      @refund_request.refund
+      @refund_request
+    end
+
   end
 end

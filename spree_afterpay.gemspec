@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'spree_core', spree_version
   s.add_dependency 'spree_backend', spree_version
   s.add_dependency 'spree_extension'
-  s.add_dependency 'afterpay-ruby', '~> 0.1.5'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'awesome_print'

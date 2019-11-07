@@ -1,7 +1,6 @@
 module SpreeAfterpay
   class Engine < Rails::Engine
     require 'spree/core'
-    require 'afterpay-ruby'
     isolate_namespace Spree
     engine_name 'spree_afterpay'
 
