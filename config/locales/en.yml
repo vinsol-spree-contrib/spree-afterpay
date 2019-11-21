@@ -25,3 +25,6 @@ en:
       unable_to_find_for_action: Unable to find Afterpay payment to %{action}
       unable_to_void: Unable to void payment with authorization code %{auth_code}
       unable_to_invalidate: Unable to invalidate payment
+    afterpay_response_service:
+      unable_to_capture: Your payment was declined by Afterpay. Please try another card on afterpay or another payment method.
+

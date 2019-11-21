@@ -13,7 +13,7 @@ Spree::Core::Engine.add_routes do
       resources :payments, only: [] do
         member do
           get 'afterpay_refund'
-          post 'afterpay_refund'
+          post 'execute_afterpay_refund'
         end
       end
     end

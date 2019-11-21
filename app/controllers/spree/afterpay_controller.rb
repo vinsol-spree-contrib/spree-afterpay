@@ -1,11 +1,12 @@
 module Spree
   class AfterpayController < StoreController
 
+    SUCCESS_STATUS = 'SUCCESS'.freeze
+    CANCELLED_STATUS = 'CANCELLED'.freeze
+
     before_action :load_order, only: [:cancel, :success]
     before_action :validate_token, only: [:cancel, :success]
     before_action :validate_success_status, only: [:success]
-    before_action :reset_completed_at_field_of_order, only: [:cancel, :success]
-    before_action :invalidate_afterpay_payment, only: [:cancel]
 
     def checkout
       @order = current_order || raise(ActiveRecord::RecordNotFound)
@@ -25,11 +26,14 @@ module Spree
     end
 
     def success
+      reset_order
       complete_order(Spree.t(:order_processed_successfully))
     end
 
     def cancel
-      if params[:status] && params[:status] == 'CANCELLED'
+      reset_order
+      invalidate_afterpay_payment
+      if params[:status] && params[:status] == CANCELLED_STATUS
         flash[:error] = Spree.t(:payment_cancelled, scope: [:afterpay])
       else
         flash[:error] = Spree.t(:payment_failed, scope: [:afterpay])
@@ -41,7 +45,7 @@ module Spree
 
     def create_afterpay_payment
       @order.payments.create!({
-        source: Spree::AfterpayCheckout.create({
+        source: Spree::Afterpay.create({
           payment_method_id: params[:payment_method_id]
         }),
         amount: @order.total,
@@ -55,20 +59,20 @@ module Spree
     end
 
     def validate_token
-      sanitized_token = params[:orderToken].try(:split, '?').try(:first)
+      sanitized_token = params[:orderToken]
       unless sanitized_token == @order.payments&.afterpay.last&.source&.token
         redirect_to(spree.cart_path)
       end
     end
 
     def validate_success_status
-      unless params[:status] && params[:status] == "SUCCESS"
+      unless params[:status] && params[:status] == SUCCESS_STATUS
         flash[:error] = Spree.t(:payment_failed, scope: [:afterpay])
         redirect_to checkout_state_path(@order.state)
       end
     end
 
-    def reset_completed_at_field_of_order
+    def reset_order
       if @order.checkout_afterpay_payments.present?
         @order.update_columns(completed_at: nil)
       end

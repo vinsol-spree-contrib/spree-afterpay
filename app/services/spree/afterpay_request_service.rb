@@ -1,5 +1,5 @@
 module Spree
-  class AfterpayService
+  class AfterpayRequestService
     attr_reader :order, :payment, :afterpay_source, :options, :payment_request
 
     def initialize(afterpay_source, options = {})

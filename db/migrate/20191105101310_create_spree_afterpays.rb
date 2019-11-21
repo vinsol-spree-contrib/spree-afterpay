@@ -1,6 +1,6 @@
-class CreateSpreeAfterpayCheckouts < ActiveRecord::Migration[6.0]
+class CreateSpreeAfterpays < ActiveRecord::Migration[6.0]
   def change
-    create_table :spree_afterpay_checkouts do |t|
+    create_table :spree_afterpays do |t|
       t.references :payment_method, index: true
       # this is order token returned by afterpay
       t.string :token

@@ -55,23 +55,24 @@ module Spree::AfterpayApi
 
     def build_customer_params
       @customer = Afterpay::Consumer.new(
-                    email: order.user&.email || order&.email,
-                    phone: order.user&.ship_address&.phone || order.ship_address&.phone,
-                    first_name: order.ship_address&.firstname,
-                    last_name: order.ship_address&.lastname
+                    email: order&.email || order.user&.email,
+                    phone: order.billing_address&.phone || order.user&.billing_address&.phone,
+                    first_name: order.billing_address&.firstname,
+                    last_name: order.billing_address&.lastname
                   )
     end
 
     def build_address_params(address_type)
+      address = order.public_send(address_type)
       instance_variable_set("@#{address_type.to_s}", Afterpay::Address.new(
-                            name: order.send(address_type)&.firstname,
-                            line_1: order.send(address_type)&.address1,
-                            line_2: order.send(address_type)&.address2,
-                            suburb: order.send(address_type)&.city,
-                            state: order.send(address_type)&.state&.name,
-                            postcode: order.send(address_type)&.zipcode,
-                            country: order.send(address_type)&.country&.iso,
-                            phone: order.send(address_type)&.phone
+                            name: address&.firstname,
+                            line_1: address&.address1,
+                            line_2: address&.address2,
+                            suburb: address&.city,
+                            state: address&.state&.name,
+                            postcode: address&.zipcode,
+                            country: address&.country&.iso,
+                            phone: address&.phone
                           ))
     end
 

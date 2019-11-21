@@ -1,9 +1,9 @@
 //= require spree/frontend
-function SpreeAfterpaySource(options) {
+function SpreeAfterpaySource() {
 }
 
 SpreeAfterpaySource.prototype.isButtonHidden = function() {
-  paymentMethod = this.checkedPaymentMethod();
+  var paymentMethod = this.checkedPaymentMethod();
   return (!$('#use_existing_card_yes:checked').length && SpreeAfterpaySource.paymentMethodID && paymentMethod.val() == SpreeAfterpaySource.paymentMethodID);
 };
 
@@ -21,25 +21,22 @@ SpreeAfterpaySource.prototype.showSaveAndContinue = function() {
 
 SpreeAfterpaySource.prototype.updateSaveAndContinueVisibility = function() {
   if (this.isButtonHidden()) {
-    $(this).trigger('hideSaveAndContinue')
+    this.hideSaveAndContinue();
   } else {
-    $(this).trigger('showSaveAndContinue')
+    this.showSaveAndContinue();
   }
 };
-
 
 SpreeAfterpaySource.prototype.init = function() {
   var _this = this;
 
   this.updateSaveAndContinueVisibility();
-  paymentMethods = $('div[data-hook="checkout_payment_step"] input[type="radio"]').click(function (e) {
+  $('div[data-hook="checkout_payment_step"] input[type="radio"]').click(function (e) {
     _this.updateSaveAndContinueVisibility();
   });
 };
 
 $(function() {
-  var options = {};
-
-  spree_afterpay_source = new SpreeAfterpaySource(options);
+  var spree_afterpay_source = new SpreeAfterpaySource();
   spree_afterpay_source.init();
 });
