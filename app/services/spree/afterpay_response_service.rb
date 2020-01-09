@@ -9,6 +9,10 @@ module Spree
       @status
     end
 
+    def captured?
+      @status || false
+    end
+
     def authorization
       nil
     end

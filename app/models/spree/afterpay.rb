@@ -8,7 +8,7 @@ module Spree
       afterpay_service = Spree::AfterpayRequestService.new(self, options)
       if afterpay_service.checkout
         self.amount_allocated = amount
-        save!
+        save
       end
     end
 

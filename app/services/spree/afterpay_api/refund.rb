@@ -17,7 +17,8 @@ module Spree::AfterpayApi
         order_id: @afterpay_source.transaction_id,
         reference: order.number,
         payment_id: payment.number,
-        amount: Money.new(amount * 100, 'AUD')
+        amount: Money.new(amount * 100, options[:currency] || Spree::Config.currency)
+        # amount: Money.new(amount * 100, 'AUD')
       )
     end
 

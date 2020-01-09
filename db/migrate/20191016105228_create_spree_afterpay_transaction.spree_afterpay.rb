@@ -6,7 +6,7 @@ class CreateSpreeAfterpayTransaction < ActiveRecord::Migration[6.0]
       t.string :action
       t.string :authorization_code
       t.references :originator, polymorphic: true, index: { name: :index_spree_afterpay_transactions_on_originator }
-      t.boolean :success
+      t.boolean :success, default: false
 
       t.timestamps null: false
     end

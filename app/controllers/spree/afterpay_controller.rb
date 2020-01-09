@@ -1,8 +1,10 @@
 module Spree
   class AfterpayController < StoreController
 
-    SUCCESS_STATUS = 'SUCCESS'.freeze
-    CANCELLED_STATUS = 'CANCELLED'.freeze
+    AFTERPAY_STATUS = {
+      success: 'SUCCESS',
+      cancelled: 'CANCELLED'
+    }.freeze
 
     before_action :load_order, only: [:cancel, :success]
     before_action :validate_token, only: [:cancel, :success]
@@ -33,7 +35,7 @@ module Spree
     def cancel
       reset_order
       invalidate_afterpay_payment
-      if params[:status] && params[:status] == CANCELLED_STATUS
+      if params[:status] && params[:status] == AFTERPAY_STATUS[:cancelled]
         flash[:error] = Spree.t(:payment_cancelled, scope: [:afterpay])
       else
         flash[:error] = Spree.t(:payment_failed, scope: [:afterpay])
@@ -59,14 +61,13 @@ module Spree
     end
 
     def validate_token
-      sanitized_token = params[:orderToken]
-      unless sanitized_token == @order.payments&.afterpay.last&.source&.token
+      unless params[:orderToken] == @order.payments&.afterpay.last&.source&.token
         redirect_to(spree.cart_path)
       end
     end
 
     def validate_success_status
-      unless params[:status] && params[:status] == SUCCESS_STATUS
+      unless params[:status] && params[:status] == AFTERPAY_STATUS[:success]
         flash[:error] = Spree.t(:payment_failed, scope: [:afterpay])
         redirect_to checkout_state_path(@order.state)
       end
