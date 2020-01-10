@@ -5,7 +5,6 @@ en:
   spree:
     afterpay:
       error_processing_payment: There was an error processing the Afterpay payment
-      order_marked_paid_info: "At %{time}, order number %{number} was marked as complete, because the user was redirected to the afterpay payment portal"
       payment_declined: The payment from Afterpay was declined.
       payment_failed: The payment from Afterpay was failed.
       payment_cancelled: The payment from Afterpay was cancelled.

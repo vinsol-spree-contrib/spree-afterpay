@@ -1,8 +1,9 @@
 module Spree
   class AfterpayResponseService
 
-    def initialize(status)
-      @status = status
+    def initialize(afterpay_service)
+      @afterpay_service = afterpay_service
+      @status = afterpay_service.payment_request.success?
     end
 
     def success?
@@ -10,11 +11,15 @@ module Spree
     end
 
     def captured?
-      @status || false
+      @status
     end
 
     def authorization
       nil
+    end
+
+    def transaction_id
+      @afterpay_service.payment_request.transaction_id
     end
 
     def to_s

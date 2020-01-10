@@ -25,11 +25,12 @@ module Spree
       return false unless afterpay_source.token.present?
 
       afterpay_service = Spree::AfterpayRequestService.new(afterpay_source, gateway_options)
-      afterpay_response = Spree::AfterpayResponseService.new(afterpay_service.capture)
+      afterpay_service.capture
+      afterpay_response = Spree::AfterpayResponseService.new(afterpay_service)
       if afterpay_response.captured?
         # We need to store the transaction id for the future.
         # This is mainly so we can use it later on to refund the payment if the user wishes.
-        transaction_id = afterpay_service.payment_request.transaction_id
+        transaction_id = afterpay_response.transaction_id
         afterpay_source.payment.update_columns(response_code: transaction_id)
         afterpay_source.update_columns(transaction_id: transaction_id)
       end

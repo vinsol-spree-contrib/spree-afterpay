@@ -18,9 +18,9 @@ module Spree
       afterpay_source = @order.checkout_afterpay_payments.last.try(:source)
       if afterpay_source && afterpay_source.checkout(@order.outstanding_balance - @order.total_applied_store_credit, currency: current_currency, auto_capture: true)
         # Set the completed_at field of the current order, so that it is no longer shown to the user in the current session
-        @order.update_columns(completed_at: Time.current, special_instructions: Spree.t(:order_marked_paid_info, scope: :afterpay, time: Time.current, number: @order.number))
+        @order.update_columns(completed_at: Time.current)
         @token = afterpay_source.token
-        render partial: "spree/checkout/initialize_afterpay"
+        render partial: 'spree/checkout/initialize_afterpay'
       else
         flash[:error] = Spree.t(:unable_to_checkout, scope: [:afterpay_payment_method])
         redirect_to checkout_state_path(@order.state)

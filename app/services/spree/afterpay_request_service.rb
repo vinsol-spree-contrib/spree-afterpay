@@ -18,7 +18,7 @@ module Spree
     def capture
       @payment_request = Spree::AfterpayApi::Payment.new(order, payment, afterpay_source, options)
       @payment_request.capture
-      @payment_request.success?
+      @payment_request
     end
 
     def refund
