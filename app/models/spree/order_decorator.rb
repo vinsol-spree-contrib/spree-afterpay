@@ -7,7 +7,7 @@ Spree::Order.class_eval do
 
   def eligible_for_afterpay?
     # Afterpay assigns a maximum transaction amount that can be charged to every merchant
-    outstanding_balance <= Afterpay.config.maximum_amount
+    outstanding_balance - total_applied_store_credit <= Afterpay.config.maximum_amount
   end
 
 end

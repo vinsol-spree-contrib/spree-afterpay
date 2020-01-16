@@ -16,7 +16,7 @@
           <small><em><%= Spree.t(:original_amount, scope: :afterpay, :amount => @payment.display_amount) %></em></small><br>
         </div>
 
-        <% currency = ::Money::Currency.new(Spree::Config[:currency]) %>
+        <% currency = ::Money::Currency.new(@payment.currency) %>
         <div class="form-group">
           <div class="input-group">
             <% if currency.symbol_first %>

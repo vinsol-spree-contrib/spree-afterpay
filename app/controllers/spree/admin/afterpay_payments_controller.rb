@@ -9,7 +9,11 @@ module Spree
     private
 
     def load_order
-      @order = Spree::Order.where(number: params[:order_id]).first
+      @order = Spree::Order.find_by(number: params[:order_id])
+
+      unless @order.present?
+        redirect_to(spree.cart_path)
+      end
     end
   end
 end

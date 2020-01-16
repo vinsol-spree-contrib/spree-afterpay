@@ -46,7 +46,7 @@ module Spree
       refund_transaction_response = afterpay_service.refund
       if refund_transaction_response.success?
         payment.source.update_columns({
-          refunded_at: Time.now,
+          refunded_at: Time.current,
           refund_transaction_id: refund_transaction_response.refund_id,
           state: 'refunded',
           refund_type: refund_type

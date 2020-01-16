@@ -17,8 +17,6 @@ module Spree
 
       afterpay_source = @order.checkout_afterpay_payments.last.try(:source)
       if afterpay_source && afterpay_source.checkout(@order.outstanding_balance - @order.total_applied_store_credit, currency: current_currency, auto_capture: true)
-        # Set the completed_at field of the current order, so that it is no longer shown to the user in the current session
-        @order.update_columns(completed_at: Time.current)
         @token = afterpay_source.token
         render partial: 'spree/checkout/initialize_afterpay'
       else
@@ -28,12 +26,10 @@ module Spree
     end
 
     def success
-      reset_order
       complete_order(Spree.t(:order_processed_successfully))
     end
 
     def cancel
-      reset_order
       invalidate_afterpay_payment
       if params[:status] && params[:status] == AFTERPAY_STATUS[:cancelled]
         flash[:error] = Spree.t(:payment_cancelled, scope: [:afterpay])
@@ -70,12 +66,6 @@ module Spree
       unless params[:status] && params[:status] == AFTERPAY_STATUS[:success]
         flash[:error] = Spree.t(:payment_failed, scope: [:afterpay])
         redirect_to checkout_state_path(@order.state)
-      end
-    end
-
-    def reset_order
-      if @order.checkout_afterpay_payments.present?
-        @order.update_columns(completed_at: nil)
       end
     end
 

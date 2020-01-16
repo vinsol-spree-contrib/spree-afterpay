@@ -32,8 +32,8 @@ module Spree::AfterpayApi
 
     def build_afterpay_order
       @afterpay_order = Afterpay::Order.new(
-        # total: Money.new(payment.amount * 100, 'AUD'),
-        total: Money.new(payment.amount * 100, options[:currency] || Spree::Config.currency),
+        # total: Money.new(payment.display_amount.amount_in_cents, 'AUD'),
+        total: payment.display_amount.money,
         consumer: customer,
         items: items,
         success_url: Spree.railtie_routes_url_helpers.success_afterpay_url(order, host: host_url),
@@ -41,8 +41,8 @@ module Spree::AfterpayApi
         reference: order.number,
         billing_address: billing_address,
         shipping_address: shipping_address,
-        # shipping: Money.new(order.shipment_total * 100, 'AUD')
-        shipping: Money.new(order.shipment_total * 100, options[:currency] || Spree::Config.currency)
+        # shipping: Money.new(order.display_shipment_total.amount_in_cents, 'AUD')
+        shipping: order.display_shipment_total.money
       )
     end
 
@@ -80,8 +80,8 @@ module Spree::AfterpayApi
       order.line_items.each do |line_item|
         items << Afterpay::Item.new(
           name: line_item.name,
-          # price: Money.new(line_item.price * 100, 'AUD'),
-          price: Money.new(line_item.price * 100, options[:currency] || Spree::Config.currency),
+          # price: Money.new(line_item.display_price.amount_in_cents, 'AUD'),
+          price: line_item.display_price.money,
           sku: line_item.sku,
           quantity: line_item.quantity,
         )

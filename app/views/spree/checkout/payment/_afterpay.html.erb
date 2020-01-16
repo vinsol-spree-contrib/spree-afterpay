@@ -2,7 +2,7 @@
   <% param_prefix = "payment_source[#{payment_method.id}]" %>
   <p><%= payment_method.description.html_safe %></p>
 
-  <%= link_to(image_tag("https://site-assets.afterpay.com/assets/afterpay_logo-c6f18616342f97c47c82457cf06eb00e0249830809ff092c32727f5dff8a1eba.svg"), afterpay_checkout_url(payment_method_id: payment_method.id), method: :post, id: "afterpay_button") %>
+  <%= link_to(image_tag(Spree::AfterpayConfig.afterpay_logo_url), afterpay_checkout_url(payment_method_id: payment_method.id), method: :post, id: "afterpay_button") %>
 </div>
 
 <script>
