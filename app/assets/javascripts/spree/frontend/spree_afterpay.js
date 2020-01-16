@@ -2,37 +2,37 @@
 function SpreeAfterpaySource() {
 }
 
-SpreeAfterpaySource.prototype.isButtonHidden = function() {
+SpreeAfterpaySource.prototype._isButtonHidden = function() {
   var paymentMethod = this.checkedPaymentMethod();
   return (!$('#use_existing_card_yes:checked').length && SpreeAfterpaySource.paymentMethodID && paymentMethod.val() == SpreeAfterpaySource.paymentMethodID);
 };
 
-SpreeAfterpaySource.prototype.checkedPaymentMethod = function() {
+SpreeAfterpaySource.prototype._checkedPaymentMethod = function() {
   return $('div[data-hook="checkout_payment_step"] input[type="radio"][name="order[payments_attributes][][payment_method_id]"]:checked');
 };
 
-SpreeAfterpaySource.prototype.hideSaveAndContinue = function() {
+SpreeAfterpaySource.prototype._hideSaveAndContinue = function() {
   $("#checkout_form_payment [data-hook=buttons]").hide();
 };
 
-SpreeAfterpaySource.prototype.showSaveAndContinue = function() {
+SpreeAfterpaySource.prototype._showSaveAndContinue = function() {
   $("#checkout_form_payment [data-hook=buttons]").show();
 };
 
-SpreeAfterpaySource.prototype.updateSaveAndContinueVisibility = function() {
-  if (this.isButtonHidden()) {
-    this.hideSaveAndContinue();
+SpreeAfterpaySource.prototype._updateSaveAndContinueVisibility = function() {
+  if (this._isButtonHidden()) {
+    this._hideSaveAndContinue();
   } else {
-    this.showSaveAndContinue();
+    this._showSaveAndContinue();
   }
 };
 
 SpreeAfterpaySource.prototype.init = function() {
   var _this = this;
 
-  this.updateSaveAndContinueVisibility();
+  this._updateSaveAndContinueVisibility();
   $('div[data-hook="checkout_payment_step"] input[type="radio"]').click(function (e) {
-    _this.updateSaveAndContinueVisibility();
+    _this._updateSaveAndContinueVisibility();
   });
 };
 

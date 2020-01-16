@@ -13,8 +13,8 @@ en:
       refund: "Refund"
       refund_amount: "Amount"
       original_amount: "Original amount: %{amount}"
-      refund_successful: "PayPal refund successful"
-      refund_unsuccessful: "PayPal refund unsuccessful"
+      refund_successful: "Afterpay refund successful"
+      refund_unsuccessful: "Afterpay refund unsuccessful"
     afterpay_payment_method:
       no_amount_allocation: No amount allocated for payment
       successful_action: Afterpay payment was successfully able to %{action}
