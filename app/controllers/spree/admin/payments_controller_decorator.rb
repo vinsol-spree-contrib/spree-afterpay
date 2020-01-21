@@ -9,7 +9,7 @@ module Spree::Admin::PaymentsControllerDecorator
   def execute_afterpay_refund
     response = @payment.payment_method.refund(@payment, params[:refund_amount].to_f)
 
-    if response.success?
+    if response && response.success?
       flash[:success] = Spree.t(:refund_successful, scope: 'afterpay')
       redirect_to admin_order_payments_path(@order)
     else

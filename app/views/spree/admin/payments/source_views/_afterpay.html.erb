@@ -10,7 +10,9 @@
   <div class="row">
     <div class="col-md-6">
     <% if payment.source.state != 'refunded' %>
-      <%= button_link_to Spree.t('actions.refund', scope: :afterpay), spree.afterpay_refund_admin_order_payment_path(@order, payment), class: 'btn btn-primary' %>
+      <% if payment.state == 'completed'  %>
+        <%= button_link_to Spree.t('actions.refund', scope: :afterpay), spree.afterpay_refund_admin_order_payment_path(@order, payment), class: 'btn btn-primary' %>
+      <% end %>
     </div>
     <% else %>
       <div class="col-md-6">

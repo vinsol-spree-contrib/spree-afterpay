@@ -3,7 +3,7 @@ function SpreeAfterpaySource() {
 }
 
 SpreeAfterpaySource.prototype._isButtonHidden = function() {
-  var paymentMethod = this.checkedPaymentMethod();
+  var paymentMethod = this._checkedPaymentMethod();
   return (!$('#use_existing_card_yes:checked').length && SpreeAfterpaySource.paymentMethodID && paymentMethod.val() == SpreeAfterpaySource.paymentMethodID);
 };
 

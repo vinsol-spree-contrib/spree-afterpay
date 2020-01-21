@@ -63,5 +63,24 @@ module Spree
       end
       refund_transaction_response
     end
+
+    def credit(amount_in_cents, auth_code, gateway_options)
+      payment = gateway_options[:originator].payment
+      amount = amount_in_cents / 100.0.to_d
+      afterpay_refund_service = refund(payment, amount)
+
+      if afterpay_refund_service.success?
+        ActiveMerchant::Billing::Response.new(
+          true,
+          Spree.t('refund_successful', scope: :afterpay),
+          {},
+          authorization: afterpay_refund_service.afterpay_refund.refund_id || afterpay_refund_service.afterpay_refund
+        )
+      else
+        ActiveMerchant::Billing::Response.new(false, Spree.t('refund_unsuccessful', scope: :afterpay), {}, {})
+      end
+
+    end
+
   end
 end
