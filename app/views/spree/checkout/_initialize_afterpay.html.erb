@@ -1,0 +1,12 @@
+<% if Afterpay.config.env == "live" %>
+  <script src="https://portal.afterpay.com/afterpay.js"></script>
+<% else %>
+  <script src="https://portal.sandbox.afterpay.com/afterpay.js"></script>
+<% end %>
+<script type="text/javascript">
+  window.onload = function() {
+    // AfterPay.initialize({ countryCode: "AU" });
+    AfterPay.initialize({ countryCode: Spree::Country.find_by(id: Spree::Config[:default_country_id])&.iso || 'US' });
+    AfterPay.redirect({ token: "<%= @token %>" });
+  };
+</script>

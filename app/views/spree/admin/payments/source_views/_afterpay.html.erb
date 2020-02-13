@@ -1,0 +1,33 @@
+<fieldset data-hook="afterpay_payment">
+  <legend><%= Spree.t(:name, scope: [:afterpay, :payment_details]) %></legend>
+  <table class="table table-condensed table-bordered">
+    <th><%= Spree.t(:token) %>:</th>
+    <td><%= payment.source.token %></td>
+    <th><%= Spree.t(:transaction_id) %>:</th>
+    <td><%= payment.source.transaction_id %></td>
+  </table>
+
+  <div class="row">
+    <div class="col-md-6">
+    <% if payment.source.state != 'refunded' %>
+      <% if payment.state == 'completed'  %>
+        <%= button_link_to Spree.t('actions.refund', scope: :afterpay), spree.afterpay_refund_admin_order_payment_path(@order, payment), class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+    <% else %>
+      <div class="col-md-6">
+        <dl>
+          <dt><%= Spree.t(:state, scope: :afterpay) %>:</dt>
+          <dd><%= payment.source.state.titleize %></dd>
+
+          <dt><%= Spree.t(:refunded_at, scope: :afterpay) %>:</dt>
+          <dd><%= pretty_time(payment.source.refunded_at) %></dd>
+
+          <dt><%= Spree.t(:refund_transaction_id, scope: :afterpay) %>:</dt>
+          <dd><%= payment.source.refund_transaction_id %></dd>
+        </dl>
+      </div>
+    <% end %>
+  </div>
+
+</fieldset>

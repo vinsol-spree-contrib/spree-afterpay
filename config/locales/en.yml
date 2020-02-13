@@ -2,4 +2,32 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  spree:
+    afterpay:
+      actions:
+        refund: Refund
+      already_refunded: This payment has already been refunded
+      error_processing_payment: There was an error processing the Afterpay payment
+      no_payment_via_admin_backend: You cannot charge Afterpay accounts through the admin backend.
+      payment_declined: The payment from Afterpay was declined.
+      payment_failed: The payment from Afterpay was failed.
+      payment_cancelled: The payment from Afterpay was cancelled.
+      payment_details:
+        name: Afterpay
+      refund: "Refund"
+      refund_amount: "Amount"
+      original_amount: "Original amount: %{amount}"
+      refund_successful: "Afterpay refund successful"
+      refund_unsuccessful: "Afterpay refund unsuccessful"
+    afterpay_payment_method:
+      no_amount_allocation: No amount allocated for payment
+      successful_action: Afterpay payment was successfully able to %{action}
+      unable_to_capture: Your payment was declined by Afterpay. Please try another card on afterpay or another payment method.
+      unable_to_find: Unable to find Afterpay payment
+      unable_to_checkout: An error occured while connecting with Afterpay. Please try another payment method.
+      unable_to_find_for_action: Unable to find Afterpay payment to %{action}
+      unable_to_void: Unable to void payment with authorization code %{auth_code}
+      unable_to_invalidate: Unable to invalidate payment
+    afterpay_response_service:
+      unable_to_capture: Your payment was declined by Afterpay. Please try another card on afterpay or another payment method.
+

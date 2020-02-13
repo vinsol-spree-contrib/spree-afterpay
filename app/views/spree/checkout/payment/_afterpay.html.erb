@@ -1,0 +1,12 @@
+<div>
+  <% param_prefix = "payment_source[#{payment_method.id}]" %>
+  <p><%= payment_method.description.html_safe %></p>
+
+  <%= link_to(image_tag(Spree::AfterpayConfig.afterpay_logo_url), afterpay_checkout_url(payment_method_id: payment_method.id), method: :post, id: "afterpay_button") %>
+</div>
+
+<script>
+  SpreeAfterpaySource.paymentMethodID = "<%= payment_method.id %>"
+</script>
+
+

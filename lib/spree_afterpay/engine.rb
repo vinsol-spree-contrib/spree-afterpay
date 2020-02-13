@@ -9,6 +9,14 @@ module SpreeAfterpay
       g.test_framework :rspec
     end
 
+    initializer "spree.spree_afterpay.preferences", after: "spree.environment" do |app|
+      Spree::AfterpayConfig = Spree::AfterpayConfiguration.new
+    end
+
+    initializer "spree.afterpay.payment_methods", after: "spree.register.payment_methods" do |app|
+      app.config.spree.payment_methods << Spree::Gateway::Afterpay
+    end
+
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/**/*_decorator*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
