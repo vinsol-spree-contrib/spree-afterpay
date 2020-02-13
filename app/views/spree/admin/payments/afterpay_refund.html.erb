@@ -30,6 +30,11 @@
         </div>
 
         <div class="form-group">
+          <%= label_tag :refund_reason_id, Spree.t(:reason) %><br/>
+          <%= select_tag(:refund_reason_id, options_from_collection_for_select(Spree::RefundReason.active.all, :id, :name), {class: 'select2'}) %>
+        </div>
+
+        <div class="form-group">
           <%= button Spree.t(:refund, scope: :afterpay), class: 'btn btn-primary' %>
         </div>
       </fieldset>

@@ -37,28 +37,29 @@ module Spree
       afterpay_response
     end
 
-    def refund(payment, amount)
+    def refund(payment, amount, refund_reason_id = nil)
       return false if payment.nil? || amount <= 0.0 || amount > payment.amount
 
       refund_type = payment.amount == amount ? 'Full' : 'Partial'
-
       afterpay_service = Spree::AfterpayRequestService.new(payment.source, amount: amount)
       refund_transaction_response = afterpay_service.refund
+
       if refund_transaction_response.success?
+        payment.order.update_columns({
+          payment_total: payment.amount - amount
+        })
+
         payment.source.update_columns({
           refunded_at: Time.current,
-          refund_transaction_id: refund_transaction_response.refund_id,
+          refund_transaction_id: refund_transaction_response.afterpay_refund.refund_id,
           state: 'refunded',
           refund_type: refund_type
         })
 
-        payment.class.create!(
-          order: payment.order,
-          source: payment,
-          payment_method: payment.payment_method,
-          amount: amount.abs * -1,
-          response_code: refund_transaction_response.refund_id,
-          state: 'completed'
+        payment.refunds.create!(
+          amount: amount.abs,
+          transaction_id: refund_transaction_response.afterpay_refund.refund_id,
+          refund_reason_id: refund_reason_id || Spree::RefundReason.first.id
         )
       end
       refund_transaction_response
@@ -67,14 +68,28 @@ module Spree
     def credit(amount_in_cents, auth_code, gateway_options)
       payment = gateway_options[:originator].payment
       amount = amount_in_cents / 100.0.to_d
-      afterpay_refund_service = refund(payment, amount)
+      refund_type = payment.amount == amount ? 'Full' : 'Partial'
 
-      if afterpay_refund_service.success?
+      afterpay_request_service = Spree::AfterpayRequestService.new(payment.source, amount: amount)
+      refund_transaction_response = afterpay_request_service.refund
+
+      if refund_transaction_response.success?
+        payment.order.update_columns({
+          payment_total: payment.amount - amount
+        })
+
+        payment.source.update_columns({
+          refunded_at: Time.current,
+          refund_transaction_id: refund_transaction_response.afterpay_refund.refund_id,
+          state: 'refunded',
+          refund_type: refund_type
+        })
+
         ActiveMerchant::Billing::Response.new(
           true,
           Spree.t('refund_successful', scope: :afterpay),
           {},
-          authorization: afterpay_refund_service.afterpay_refund.refund_id || afterpay_refund_service.afterpay_refund
+          authorization: refund_transaction_response.afterpay_refund.refund_id || refund_transaction_response.afterpay_refund
         )
       else
         ActiveMerchant::Billing::Response.new(false, Spree.t('refund_unsuccessful', scope: :afterpay), {}, {})

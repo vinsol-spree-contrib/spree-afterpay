@@ -6,6 +6,7 @@ en:
     afterpay:
       actions:
         refund: Refund
+      already_refunded: This payment has already been refunded
       error_processing_payment: There was an error processing the Afterpay payment
       no_payment_via_admin_backend: You cannot charge Afterpay accounts through the admin backend.
       payment_declined: The payment from Afterpay was declined.
