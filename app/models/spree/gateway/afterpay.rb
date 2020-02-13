@@ -67,7 +67,7 @@ module Spree
 
     def credit(amount_in_cents, auth_code, gateway_options)
       payment = gateway_options[:originator].payment
-      amount = amount_in_cents / 100.0.to_d
+      amount = amount_in_cents / 100.0 # 1 dollar is 100 cents in all countries where afterpay is used
       refund_type = payment.amount == amount ? 'Full' : 'Partial'
 
       afterpay_request_service = Spree::AfterpayRequestService.new(payment.source, amount: amount)
