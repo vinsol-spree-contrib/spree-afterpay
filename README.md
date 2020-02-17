@@ -30,9 +30,7 @@ And then execute:
 Configuration
 -------
 
-* You need to configure Afterpay using your Merchant ID and secret.
-
-Put this in your initializer.
+* Put this in an initializer(/initializers/afterpay.rb).
 
 ```ruby
 Afterpay.configure do |config|
@@ -54,7 +52,26 @@ end
 
 For getting app_id and secret key, please contact afterpay for merchant credentials.(https://retailers.afterpay.com/merchant-enquiry/)
 
-* Create a new payment method in spree backend with Afterpay as provider with auto_capture: true
+* Create a new payment method in spree backend with Afterpay as provider and with auto_capture set to true
+
+Working
+-----------
+
+* The user will start seeing afterpay as a payment option during checkout if the order value is between the limit set by afterpay for your account.
+
+* If the users clicks on afterpay logo in the payment options, they will be redirected to afterpay portal to complete the payment.
+
+* Upon completing the payment on afterpay portal they will be redirected back to the website to the success_url(sent to afterpay during checkout) if the payment was completed with or to cancel_url if the payment failed.
+
+* The user will pay the order amount to afterpay in 4 installments and afterpay will transfer the complete amount to the merchant when the order is placed.
+
+
+Screenshots
+-----------
+
+![Admin End](/screenshots/admin.png "Admin End")
+![Front End](/screenshots/user.png "Front End")
+
 
 Testing
 -------
